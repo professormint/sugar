@@ -12,7 +12,6 @@ use anyhow::{anyhow, Result};
 use clap::Parser;
 use console::style;
 use sugar_cli::{
-    bundlr::{process_bundlr, BundlrArgs},
     cli::{Cli, CollectionSubcommands, Commands},
     collections::{
         process_remove_collection, process_set_collection, RemoveCollectionArgs, SetCollectionArgs,
@@ -133,18 +132,7 @@ async fn run() -> Result<()> {
     .expect("Error setting Ctrl-C handler");
 
     match cli.command {
-        Commands::Bundlr {
-            keypair,
-            rpc_url,
-            action,
-        } => {
-            process_bundlr(BundlrArgs {
-                keypair,
-                rpc_url,
-                action,
-            })
-            .await?
-        }
+
         Commands::Collection { command } => match command {
             CollectionSubcommands::Set {
                 keypair,
@@ -238,12 +226,14 @@ async fn run() -> Result<()> {
             number,
             receiver,
             candy_machine,
+            roadmap
         } => process_mint(MintArgs {
             keypair,
             rpc_url,
             cache,
             number,
             receiver,
+            roadmap,
             candy_machine,
         })?,
         Commands::Show {

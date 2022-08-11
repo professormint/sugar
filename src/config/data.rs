@@ -76,6 +76,8 @@ pub struct ConfigData {
 
     #[serde(serialize_with = "to_option_string")]
     pub shdw_storage_account: Option<String>,
+
+    pub roadmap : String
 }
 
 pub fn to_string<T, S>(value: &T, serializer: S) -> Result<S::Ok, S::Error>
@@ -300,7 +302,6 @@ impl HiddenSettings {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum UploadMethod {
-    Bundlr,
     #[serde(rename = "aws")]
     AWS,
     NftStorage,
@@ -316,7 +317,7 @@ impl Display for UploadMethod {
 
 impl Default for UploadMethod {
     fn default() -> UploadMethod {
-        UploadMethod::Bundlr
+        UploadMethod::SHDW
     }
 }
 

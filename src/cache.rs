@@ -54,6 +54,8 @@ pub struct CacheProgram {
     pub candy_machine_creator: String,
     #[serde(rename = "collectionMint")]
     pub collection_mint: String,
+    #[serde(rename = "roadmap")]
+    pub roadmap : String
 }
 
 impl CacheProgram {
@@ -62,6 +64,7 @@ impl CacheProgram {
             candy_machine: String::new(),
             candy_machine_creator: String::new(),
             collection_mint: String::new(),
+            roadmap : String::new()
         }
     }
 
@@ -72,6 +75,7 @@ impl CacheProgram {
             candy_machine: candy_machine.to_string(),
             candy_machine_creator: candy_machine_creator_pda.to_string(),
             collection_mint: String::new(),
+            roadmap : String::new()
         }
     }
 }

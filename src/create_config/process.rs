@@ -179,6 +179,11 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
         .expect("Failed to parse string into u64 that should have already been validated.");
 
     // number
+    config_data.roadmap = Input::with_theme(&theme)
+    .with_prompt("What is the roadmap publickey?")
+    .validate_with(pubkey_validator)
+    .interact()
+    .unwrap();
 
     config_data.number = if num_files > 0 && (num_files % 2) == 0 && Confirm::with_theme(&theme)
         .with_prompt(
@@ -556,7 +561,7 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
 
     // upload method
 
-    let upload_options = vec!["Bundlr", "AWS", "NFT Storage", "SHDW"];
+    let upload_options = vec!["AWS", "NFT Storage", "SHDW"];
     config_data.upload_method = match Select::with_theme(&theme)
         .with_prompt("What upload method do you want to use?")
         .items(&upload_options)
@@ -564,11 +569,9 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
         .interact()
         .unwrap()
     {
-        0 => UploadMethod::Bundlr,
-        1 => UploadMethod::AWS,
-        2 => UploadMethod::NftStorage,
-        3 => UploadMethod::SHDW,
-        _ => UploadMethod::Bundlr,
+        0 => UploadMethod::AWS,
+        1 => UploadMethod::NftStorage,
+        _ => UploadMethod::SHDW,
     };
 
     if config_data.upload_method == UploadMethod::AWS {

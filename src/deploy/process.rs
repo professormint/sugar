@@ -44,7 +44,6 @@ pub async fn process_deploy(args: DeployArgs) -> Result<()> {
     // loads the cache file (this needs to have been created by
     // the upload command)
     let mut cache = load_cache(&args.cache, false)?;
-
     if cache.items.is_empty() {
         println!(
             "{}",
@@ -78,6 +77,7 @@ pub async fn process_deploy(args: DeployArgs) -> Result<()> {
     let client = setup_client(&sugar_config)?;
     let mut config_data = get_config_data(&args.config)?;
 
+
     let candy_machine_address = &cache.program.candy_machine;
 
     // checks the candy machine data
@@ -109,7 +109,6 @@ pub async fn process_deploy(args: DeployArgs) -> Result<()> {
             style(format!("[1/{}]", total_steps)).bold().dim(),
             CANDY_EMOJI
         );
-        info!("Candy machine address is empty, creating new candy machine...");
 
         let spinner = spinner_with_style();
         spinner.set_message("Creating candy machine...");
@@ -119,9 +118,11 @@ pub async fn process_deploy(args: DeployArgs) -> Result<()> {
 
         let uuid = DEFAULT_UUID.to_string();
         let candy_data = create_candy_machine_data(&client, &config_data, uuid)?;
+
         let program = client.program(CANDY_MACHINE_ID);
 
         let treasury_wallet = match config_data.spl_token {
+
             Some(spl_token) => {
                 let spl_token_account_figured = if config_data.spl_token_account.is_some() {
                     config_data.spl_token_account
@@ -132,9 +133,11 @@ pub async fn process_deploy(args: DeployArgs) -> Result<()> {
                 if config_data.sol_treasury_account.is_some() {
                     return Err(anyhow!("If spl-token-account or spl-token is set then sol-treasury-account cannot be set"));
                 }
+                println!("Checking spl");
 
                 // validates the mint address of the token accepted as payment
                 check_spl_token(&program, &spl_token.to_string())?;
+                println!("spl checjed");
 
                 if let Some(token_account) = spl_token_account_figured {
                     // validates the spl token wallet to receive proceedings from SPL token payments
@@ -161,8 +164,8 @@ pub async fn process_deploy(args: DeployArgs) -> Result<()> {
             treasury_wallet,
             program,
         )?;
-        info!("Candy machine initialized with sig: {}", sig);
-        info!(
+        println!("\n\nCandy machine initialized with sig: {}\\n\n", sig);
+        println!(
             "Candy machine created with address: {}",
             &candy_pubkey.to_string()
         );
