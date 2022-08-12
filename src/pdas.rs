@@ -1,8 +1,9 @@
 use anchor_client::{solana_sdk::pubkey::Pubkey, ClientError, Program};
 use anyhow::{anyhow, Result};
 use mpl_candy_machine::CollectionPDA;
+use mpl_token_metadata::state::{ TokenMetadataAccount};
+
 use mpl_token_metadata::{
-    deser::meta_deser,
     pda::{find_master_edition_account, find_metadata_account},
     state::{Key, MasterEditionV2, Metadata, MAX_MASTER_EDITION_LEN},
     utils::try_from_slice_checked,
@@ -26,7 +27,7 @@ pub fn get_metadata_pda(mint: &Pubkey, program: &Program) -> Result<PdaInfo<Meta
             &metadata_pubkey.to_string()
         )
     })?;
-    let metadata = meta_deser(&mut metadata_account.data.as_slice());
+    let metadata = mpl_token_metadata::state::Metadata::safe_deserialize(&mut metadata_account.data.as_slice());
     metadata.map(|m| (metadata_pubkey, m)).map_err(|_| {
         anyhow!(
             "Failed to deserialize metadata account: {}",
@@ -84,6 +85,17 @@ pub fn find_collection_pda(candy_machine_id: &Pubkey) -> (Pubkey, u8) {
 
     Pubkey::find_program_address(collection_seeds, &CANDY_MACHINE_ID)
 }
+
+pub fn find_minting_account_record_plugin(
+    roadmap : &Pubkey,
+) -> Pubkey {
+    Pubkey::find_program_address(
+        &[b"phase_minting_account_record", roadmap.as_ref()],
+        &CANDY_MACHINE_ID,
+    )
+    .0
+}
+
 
 pub fn get_collection_pda(
     candy_machine: &Pubkey,

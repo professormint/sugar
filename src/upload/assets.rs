@@ -5,7 +5,6 @@ use std::{
     sync::Arc,
 };
 
-use bundlr_sdk::{tags::Tag, Bundlr, Ed25519Signer as SolanaSigner};
 use data_encoding::HEXLOWER;
 use glob::glob;
 use regex::{Regex, RegexBuilder};
@@ -15,13 +14,12 @@ use serde_json;
 
 use crate::{common::*, validate::format::Metadata};
 
-pub struct UploadDataArgs<'a> {
-    pub bundlr_client: Arc<Bundlr<SolanaSigner>>,
-    pub assets_dir: &'a Path,
-    pub extension_glob: &'a str,
-    pub tags: Vec<Tag>,
-    pub data_type: DataType,
-}
+// pub struct UploadDataArgs<'a> {
+//     pub assets_dir: &'a Path,
+//     pub extension_glob: &'a str,
+//     pub tags: Vec<Tag>,
+//     pub data_type: DataType,
+// }
 
 #[derive(Debug, Clone)]
 pub enum DataType {

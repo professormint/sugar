@@ -273,9 +273,6 @@ pub async fn initialize(
 ) -> Result<Box<dyn Uploader>> {
     Ok(match config_data.upload_method {
         UploadMethod::AWS => Box::new(AWSMethod::new(config_data).await?) as Box<dyn Uploader>,
-        UploadMethod::Bundlr => {
-            Box::new(BundlrMethod::new(sugar_config, config_data).await?) as Box<dyn Uploader>
-        }
         UploadMethod::NftStorage => {
             Box::new(NftStorageMethod::new(config_data).await?) as Box<dyn Uploader>
         }

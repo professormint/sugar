@@ -14,7 +14,7 @@ pub use mpl_token_metadata::state::{
 };
 use solana_program::native_token::LAMPORTS_PER_SOL;
 
-use crate::{candy_machine::parse_config_price, common::*, config::data::*, deploy::errors::*};
+use crate::{candy_machine::parse_config_price, common::*, config::data::*, deploy::errors::*, pdas::find_minting_account_record_plugin};
 
 /// Create the candy machine data struct.
 pub fn create_candy_machine_data(
@@ -94,7 +94,8 @@ pub fn initialize_candy_machine(
 ) -> Result<Signature> {
     let payer = program.payer();
     let items_available = candy_machine_data.items_available;
-
+    let roadmap = Pubkey::from_str(&config_data.roadmap).unwrap();
+    let minting_account_record_plugin = find_minting_account_record_plugin(&roadmap);
     let candy_account_size = if candy_machine_data.hidden_settings.is_some() {
         CONFIG_ARRAY_START
     } else {
@@ -110,6 +111,8 @@ pub fn initialize_candy_machine(
         candy_account_size,
         candy_account.pubkey().to_string()
     );
+
+    println!("\n\n{}\n\n", treasury_wallet.to_string());
 
     let lamports = program
         .rpc()
@@ -138,6 +141,8 @@ pub fn initialize_candy_machine(
         .accounts(nft_accounts::InitializeCandyMachine {
             candy_machine: candy_account.pubkey(),
             wallet: treasury_wallet,
+            roadmap,
+            minting_account_record_plugin,
             authority: payer,
             payer,
             system_program: system_program::id(),

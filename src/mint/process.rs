@@ -41,12 +41,14 @@ pub struct MintArgs {
     pub cache: String,
     pub number: Option<u64>,
     pub receiver: Option<String>,
+    pub roadmap: String,
     pub candy_machine: Option<String>,
 }
 
 pub fn process_mint(args: MintArgs) -> Result<()> {
     let sugar_config = sugar_setup(args.keypair, args.rpc_url)?;
     let client = Arc::new(setup_client(&sugar_config)?);
+    let roadmap = Pubkey::from_str(&args.roadmap).unwrap();
 
     // the candy machine id specified takes precedence over the one from the cache
 
@@ -121,6 +123,7 @@ pub fn process_mint(args: MintArgs) -> Result<()> {
             candy_pubkey,
             Arc::clone(&candy_machine_state),
             Arc::clone(&collection_pda_info),
+            roadmap,
             receiver_pubkey,
         ) {
             Ok(signature) => format!("{} {}", style("Signature:").bold(), signature),
@@ -141,6 +144,7 @@ pub fn process_mint(args: MintArgs) -> Result<()> {
                 candy_pubkey,
                 Arc::clone(&candy_machine_state),
                 Arc::clone(&collection_pda_info),
+                roadmap,
                 receiver_pubkey,
             ) {
                 pb.abandon_with_message(format!("{}", style("Mint failed ").red().bold()));
@@ -162,6 +166,7 @@ pub fn mint(
     candy_machine_id: Pubkey,
     candy_machine_state: Arc<CandyMachine>,
     collection_pda_info: Arc<Option<PdaInfo<CollectionPDA>>>,
+    roadmap : Pubkey,
     receiver: Pubkey,
 ) -> Result<Signature> {
     let program = client.program(CANDY_MACHINE_ID);
@@ -170,6 +175,9 @@ pub fn mint(
     let authority = candy_machine_state.authority;
 
     let candy_machine_data = &candy_machine_state.data;
+
+    let minting_account_record_plugin = find_minting_account_record_plugin(&roadmap);
+  
 
     if let Some(_gatekeeper) = &candy_machine_data.gatekeeper {
         return Err(anyhow!(
@@ -356,6 +364,7 @@ pub fn mint(
             mint_authority: payer,
             update_authority: payer,
             master_edition: master_edition_pda,
+            minting_account_record_plugin,
             token_metadata_program: metaplex_program_id,
             token_program: TOKEN_PROGRAM_ID,
             system_program: system_program::id(),
@@ -399,7 +408,10 @@ pub fn mint(
                 collection_authority_record,
             })
             .args(nft_instruction::SetCollectionDuringMint {});
+            println!("\n\n\n{}\n\n\n", collection_authority_record.to_string())
+
     }
+
 
     let sig = builder.send()?;
 

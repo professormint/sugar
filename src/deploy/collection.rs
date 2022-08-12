@@ -15,7 +15,7 @@ use crate::{
     candy_machine::CANDY_MACHINE_ID,
     common::*,
     config::ConfigData,
-    pdas::{find_collection_pda, find_master_edition_pda, find_metadata_pda},
+    pdas::{find_collection_pda, find_master_edition_pda, find_metadata_pda, find_minting_account_record_plugin},
 };
 
 pub fn create_and_set_collection(
@@ -26,6 +26,9 @@ pub fn create_and_set_collection(
 ) -> Result<(Signature, Pubkey)> {
     let program = client.program(CANDY_MACHINE_ID);
     let payer = program.payer();
+    let roadmap = Pubkey::from_str(&config_data.roadmap).unwrap();
+    let minting_account_record_plugin = find_minting_account_record_plugin(&roadmap);
+
 
     let collection_mint = Keypair::new();
     let collection_item: &mut CacheItem = match cache.items.get_mut("-1") {
@@ -136,6 +139,7 @@ pub fn create_and_set_collection(
             mint: collection_mint.pubkey(),
             edition: collection_edition_pubkey,
             collection_authority_record,
+            minting_account_record_plugin,
             token_metadata_program: mpl_token_metadata::ID,
         })
         .args(nft_instruction::SetCollection);
