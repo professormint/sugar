@@ -12,7 +12,6 @@ use mpl_candy_machine::{
 pub use mpl_token_metadata::state::{
     MAX_CREATOR_LIMIT, MAX_NAME_LENGTH, MAX_SYMBOL_LENGTH, MAX_URI_LENGTH,
 };
-use solana_client::client_error::ClientError;
 use solana_program::native_token::LAMPORTS_PER_SOL;
 
 use crate::{candy_machine::parse_config_price, common::*, config::data::*, deploy::errors::*, pdas::find_minting_account_record_plugin};
@@ -161,14 +160,7 @@ pub fn initialize_candy_machine(
         });
     }
 
-    match tx.send(){
-        Ok(sig) => return Ok(sig),
-        Err(clientError) => {
-            println!("\n\n\n{:?}\n\n\n", clientError);
-            return Err(anyhow!("werro"))
-        },
-    };
+    let sig = tx.send()?;
 
-    
-
+    Ok(sig)
 }

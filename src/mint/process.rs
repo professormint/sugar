@@ -413,30 +413,24 @@ pub fn mint(
     }
 
 
-    match builder.send(){
-        Ok(sig) => return Ok(sig),
-        Err(clientError) => {
-            println!("\n\n\n{:?}\n\n\n", clientError);
-            return Err(anyhow!("werro"))
-        },
-    };
+    let sig = builder.send()?;
 
-    // if let Err(_) | Ok(Response { value: None, .. }) = program
-    //     .rpc()
-    //     .get_account_with_commitment(&metadata_pda, CommitmentConfig::processed())
-    // {
-    //     let cluster_param = match get_cluster(program.rpc()).unwrap_or(Cluster::Mainnet) {
-    //         Cluster::Devnet => "?devnet",
-    //         _ => "",
-    //     };
-    //     return Err(anyhow!(
-    //         "Minting most likely failed with a bot tax. Check the transaction link for more details: https://explorer.solana.com/tx/{}{}",
-    //         sig.to_string(),
-    //         cluster_param,
-    //     ));
-    // }
+    if let Err(_) | Ok(Response { value: None, .. }) = program
+        .rpc()
+        .get_account_with_commitment(&metadata_pda, CommitmentConfig::processed())
+    {
+        let cluster_param = match get_cluster(program.rpc()).unwrap_or(Cluster::Mainnet) {
+            Cluster::Devnet => "?devnet",
+            _ => "",
+        };
+        return Err(anyhow!(
+            "Minting most likely failed with a bot tax. Check the transaction link for more details: https://explorer.solana.com/tx/{}{}",
+            sig.to_string(),
+            cluster_param,
+        ));
+    }
 
-    // info!("Minted! TxId: {}", sig);
+    info!("Minted! TxId: {}", sig);
 
-    // Ok(sig)
+    Ok(sig)
 }
