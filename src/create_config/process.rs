@@ -23,7 +23,7 @@ use crate::{
     setup::{setup_client, sugar_setup},
     upload::list_files,
     utils::{check_spl_token, check_spl_token_account, get_dialoguer_theme},
-    validate::Metadata,
+    validate::Metadata, pdas::get_roadmap_pool_address,
 };
 
 /// Default name of the first metadata file.
@@ -333,14 +333,13 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
         config_data.creators.push(creator);
     });
 
-    const SPL_INDEX: usize = 0;
-    const GATEKEEPER_INDEX: usize = 1;
-    const WL_INDEX: usize = 2;
-    const END_SETTINGS_INDEX: usize = 3;
-    const HIDDEN_SETTINGS_INDEX: usize = 4;
+    // const SPL_INDEX: usize = 0;
+    const GATEKEEPER_INDEX: usize = 0;
+    const WL_INDEX: usize = 1;
+    const END_SETTINGS_INDEX: usize = 2;
+    const HIDDEN_SETTINGS_INDEX: usize = 3;
 
     let extra_functions_options = vec![
-        "SPL Token Mint",
         "Gatekeeper",
         "Whitelist Mint",
         "End Settings",
@@ -357,50 +356,51 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
     let sugar_config = sugar_setup(args.keypair, args.rpc_url)?;
     let client = Arc::new(setup_client(&sugar_config)?);
     let program = client.program(CANDY_MACHINE_ID);
-
-    if choices.contains(&SPL_INDEX) {
-        config_data.sol_treasury_account = None;
-        config_data.spl_token = Some(
-            Pubkey::from_str(
-                &Input::with_theme(&theme)
-                    .with_prompt("What is your SPL token mint address?")
-                    .validate_with(pubkey_validator)
-                    .validate_with(|input: &String| -> Result<()> {
-                        check_spl_token(&program, input)?;
-                        Ok(())
-                    })
-                    .interact()
-                    .unwrap(),
-            )
-            .expect("Failed to parse string into pubkey that should have already been validated."),
-        );
-        config_data.spl_token_account = Some(
-                Pubkey::from_str(
-                    &Input::with_theme(&theme)
-                        .with_prompt("What is your SPL token account address (the account that will hold the SPL token mints)?")
-                        .validate_with(pubkey_validator)
-                        .validate_with(|input: &String| -> Result<()> {
-                            check_spl_token_account(&program, input)
-                        })
-                        .interact()
-                        .unwrap(),
-                )
-                    .expect("Failed to parse string into pubkey that should have already been validated."),
-            )
-    } else {
-        config_data.spl_token = None;
-        config_data.spl_token_account = None;
-        config_data.sol_treasury_account = Some(
-            Pubkey::from_str(
-                &Input::with_theme(&theme)
-                    .with_prompt("What is your SOL treasury address?")
-                    .validate_with(pubkey_validator)
-                    .interact()
-                    .unwrap(),
-            )
-            .expect("Failed to parse string into pubkey that should have already been validated."),
-        );
-    };
+    config_data.sol_treasury_account = None;
+    config_data.spl_token = Some(WRAPPED_SOL);
+    config_data.spl_token_account = Some(get_roadmap_pool_address(&Pubkey::from_str(&config_data.roadmap).unwrap(), &WRAPPED_SOL));
+    // if choices.contains(&SPL_INDEX) {
+    //     config_data.spl_token = Some(
+    //         Pubkey::from_str(
+    //             &Input::with_theme(&theme)
+    //                 .with_prompt("What is your SPL token mint address?")
+    //                 .validate_with(pubkey_validator)
+    //                 .validate_with(|input: &String| -> Result<()> {
+    //                     check_spl_token(&program, input)?;
+    //                     Ok(())
+    //                 })
+    //                 .interact()
+    //                 .unwrap(),
+    //         )
+    //         .expect("Failed to parse string into pubkey that should have already been validated."),
+    //     );
+    //     config_data.spl_token_account = Some(
+    //             Pubkey::from_str(
+    //                 &Input::with_theme(&theme)
+    //                     .with_prompt("What is your SPL token account address (the account that will hold the SPL token mints)?")
+    //                     .validate_with(pubkey_validator)
+    //                     .validate_with(|input: &String| -> Result<()> {
+    //                         check_spl_token_account(&program, input)
+    //                     })
+    //                     .interact()
+    //                     .unwrap(),
+    //             )
+    //                 .expect("Failed to parse string into pubkey that should have already been validated."),
+    //         )
+    // } else {
+    //     config_data.spl_token = None;
+    //     config_data.spl_token_account = None;
+    //     config_data.sol_treasury_account = Some(
+    //         Pubkey::from_str(
+    //             &Input::with_theme(&theme)
+    //                 .with_prompt("What is your SOL treasury address?")
+    //                 .validate_with(pubkey_validator)
+    //                 .interact()
+    //                 .unwrap(),
+    //         )
+    //         .expect("Failed to parse string into pubkey that should have already been validated."),
+    //     );
+    // };
 
     // gatekeeper
 
