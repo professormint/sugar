@@ -52,7 +52,7 @@ solana-client = "1.10.29"
 solana-account-decoder = "=1.10.29"
 solana-logger = "1.8.1"
 solana-program = "1.10.29"
-solana-transaction-crawler = {path = "/Users/professormint/projects/solana/solana-repos/solana-transaction-crawler"}
+solana-transaction-crawler = {git = "https://github.com/dedmonkes/solana-transaction-crawler"}
 solana-transaction-status = "1.8.1"
 spl-associated-token-account = "1.0.3"
 spl-token = "~3.3.0"
