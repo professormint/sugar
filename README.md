@@ -48,17 +48,10 @@ Download [this installer binary](https://github.com/metaplex-foundation/winstall
 
 ### Developers
 
-Using Crates.io:
-
-```bash
-cargo install sugar-cli
-```
-
-
-
 Build From Source:
 
 ```bash
+git clone --recurse-submodules git@github.com:dedmonkes/sugar.git 
 cargo install --path ./
 ```
 
