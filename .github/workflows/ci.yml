@@ -15,7 +15,8 @@ jobs:
       - run: sudo apt-get install libudev-dev
       - uses: actions/checkout@v3
         with:
-          submodules: 'recursive'
+          token: ${{ secrets.GH_PAT }}
+          submodules: recursive
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -34,7 +35,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: 'recursive'
+          token: ${{ secrets.GH_PAT }}
+          submodules: recursive
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -54,7 +56,8 @@ jobs:
       - run: sudo apt-get install libudev-dev
       - uses: actions/checkout@v3
         with:
-          submodules: 'recursive'
+          token: ${{ secrets.GH_PAT }}
+          submodules: recursive
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
