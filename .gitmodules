@@ -1,4 +1,4 @@
-[submodule "modules/metaplex"]
+[submodule "metaplex"]
 	path = modules/metaplex
 	url = https://github.com/dedmonkes/metaplex-program-library.git
 	branch = master
