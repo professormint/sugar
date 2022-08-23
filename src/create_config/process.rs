@@ -3,7 +3,6 @@ use std::{
     fs::{File, OpenOptions},
     path::{Path, PathBuf},
     str::FromStr,
-    sync::Arc,
 };
 
 use anchor_lang::prelude::Pubkey;
@@ -14,16 +13,15 @@ use dialoguer::{Confirm, Input, MultiSelect, Select};
 use url::Url;
 
 use crate::{
-    candy_machine::CANDY_MACHINE_ID,
     config::{
         parse_string_as_date, ConfigData, Creator, EndSettingType, EndSettings, GatekeeperConfig,
         HiddenSettings, UploadMethod, WhitelistMintMode, WhitelistMintSettings,
     },
     constants::*,
-    setup::{setup_client, sugar_setup},
+    pdas::get_roadmap_pool_address,
     upload::list_files,
-    utils::{check_spl_token, check_spl_token_account, get_dialoguer_theme},
-    validate::Metadata, pdas::get_roadmap_pool_address,
+    utils::get_dialoguer_theme,
+    validate::Metadata,
 };
 
 /// Default name of the first metadata file.
@@ -180,10 +178,10 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
 
     // number
     config_data.roadmap = Input::with_theme(&theme)
-    .with_prompt("What is the roadmap publickey?")
-    .validate_with(pubkey_validator)
-    .interact()
-    .unwrap();
+        .with_prompt("What is the roadmap publickey?")
+        .validate_with(pubkey_validator)
+        .interact()
+        .unwrap();
 
     config_data.number = if num_files > 0 && (num_files % 2) == 0 && Confirm::with_theme(&theme)
         .with_prompt(
@@ -353,12 +351,12 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
 
     // SPL token mint
 
-    let sugar_config = sugar_setup(args.keypair, args.rpc_url)?;
-    let client = Arc::new(setup_client(&sugar_config)?);
-    let program = client.program(CANDY_MACHINE_ID);
     config_data.sol_treasury_account = None;
     config_data.spl_token = Some(WRAPPED_SOL);
-    config_data.spl_token_account = Some(get_roadmap_pool_address(&Pubkey::from_str(&config_data.roadmap).unwrap(), &WRAPPED_SOL));
+    config_data.spl_token_account = Some(get_roadmap_pool_address(
+        &Pubkey::from_str(&config_data.roadmap).unwrap(),
+        &WRAPPED_SOL,
+    ));
     // if choices.contains(&SPL_INDEX) {
     //     config_data.spl_token = Some(
     //         Pubkey::from_str(

@@ -77,7 +77,6 @@ pub async fn process_deploy(args: DeployArgs) -> Result<()> {
     let client = setup_client(&sugar_config)?;
     let mut config_data = get_config_data(&args.config)?;
 
-
     let candy_machine_address = &cache.program.candy_machine;
 
     // checks the candy machine data
@@ -122,7 +121,6 @@ pub async fn process_deploy(args: DeployArgs) -> Result<()> {
         let program = client.program(CANDY_MACHINE_ID);
 
         let treasury_wallet = match config_data.spl_token {
-
             Some(spl_token) => {
                 let spl_token_account_figured = if config_data.spl_token_account.is_some() {
                     config_data.spl_token_account

@@ -86,7 +86,6 @@ pub async fn process_launch(args: LaunchArgs) -> Result<()> {
         rpc_url: args.rpc_url.clone(),
         cache: args.cache.clone(),
         interrupted: args.interrupted.clone(),
-
     };
 
     process_deploy(deploy_args).await?;

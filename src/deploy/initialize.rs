@@ -14,7 +14,10 @@ pub use mpl_token_metadata::state::{
 };
 use solana_program::native_token::LAMPORTS_PER_SOL;
 
-use crate::{candy_machine::parse_config_price, common::*, config::data::*, deploy::errors::*, pdas::find_minting_account_record_plugin};
+use crate::{
+    candy_machine::parse_config_price, common::*, config::data::*, deploy::errors::*,
+    pdas::find_minting_account_record_plugin,
+};
 
 /// Create the candy machine data struct.
 pub fn create_candy_machine_data(
@@ -111,8 +114,6 @@ pub fn initialize_candy_machine(
         candy_account_size,
         candy_account.pubkey().to_string()
     );
-
-    println!("\n\n{}\n\n", treasury_wallet.to_string());
 
     let lamports = program
         .rpc()

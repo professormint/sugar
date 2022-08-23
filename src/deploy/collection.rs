@@ -5,7 +5,9 @@ use mpl_token_metadata::{
     pda::find_collection_authority_account,
     state::Creator,
 };
-use spl_associated_token_account::{create_associated_token_account, get_associated_token_address};
+use spl_associated_token_account::{
+    get_associated_token_address, instruction::create_associated_token_account,
+};
 use spl_token::{
     instruction::{initialize_mint, mint_to},
     ID as TOKEN_PROGRAM_ID,
@@ -15,7 +17,10 @@ use crate::{
     candy_machine::CANDY_MACHINE_ID,
     common::*,
     config::ConfigData,
-    pdas::{find_collection_pda, find_master_edition_pda, find_metadata_pda, find_minting_account_record_plugin},
+    pdas::{
+        find_collection_pda, find_master_edition_pda, find_metadata_pda,
+        find_minting_account_record_plugin,
+    },
 };
 
 pub fn create_and_set_collection(
@@ -28,7 +33,6 @@ pub fn create_and_set_collection(
     let payer = program.payer();
     let roadmap = Pubkey::from_str(&config_data.roadmap).unwrap();
     let minting_account_record_plugin = find_minting_account_record_plugin(&roadmap);
-
 
     let collection_mint = Keypair::new();
     let collection_item: &mut CacheItem = match cache.items.get_mut("-1") {

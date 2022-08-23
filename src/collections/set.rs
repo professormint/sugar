@@ -108,7 +108,7 @@ pub fn process_set_collection(args: SetCollectionArgs) -> Result<()> {
         &collection_mint_pubkey,
         &collection_metadata_info,
         &collection_edition_info,
-        &roadmap
+        &roadmap,
     )?;
 
     pb.finish_with_message(format!(
@@ -162,14 +162,14 @@ pub fn set_collection(
     collection_mint_pubkey: &Pubkey,
     collection_metadata_info: &PdaInfo<Metadata>,
     collection_edition_info: &PdaInfo<MasterEditionV2>,
-    roadmap : &Pubkey
+    roadmap: &Pubkey,
 ) -> Result<Signature> {
     let payer = program.payer();
 
     let collection_pda_pubkey = find_collection_pda(candy_pubkey).0;
     let (collection_metadata_pubkey, collection_metadata) = collection_metadata_info;
     let (collection_edition_pubkey, collection_edition) = collection_edition_info;
-    let minting_account_record_plugin = find_minting_account_record_plugin(&roadmap);
+    let minting_account_record_plugin = find_minting_account_record_plugin(roadmap);
 
     let collection_authority_record =
         find_collection_authority_account(collection_mint_pubkey, &collection_pda_pubkey).0;

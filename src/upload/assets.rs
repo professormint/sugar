@@ -2,7 +2,6 @@ use std::{
     ffi::OsStr,
     fs::{self, DirEntry, File, OpenOptions},
     io::{BufReader, Read},
-    sync::Arc,
 };
 
 use data_encoding::HEXLOWER;

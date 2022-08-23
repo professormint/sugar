@@ -87,7 +87,7 @@ pub fn process_withdraw(args: WithdrawArgs) -> Result<()> {
                     commitment: Some(CommitmentConfig {
                         commitment: CommitmentLevel::Confirmed,
                     }),
-                    min_context_slot : None
+                    min_context_slot: None,
                 },
                 with_context: None,
             };

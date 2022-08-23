@@ -55,13 +55,14 @@ pub const MINT_LAYOUT: u64 = 82;
 
 pub const DEFAULT_UUID: &str = "000000";
 
-pub const PHASE_PROTOCOL_ID : &str= "GsdejdRJedqmMw8WZLXsYd4eC4jWztsUTp7FG1c4Bnw5";
+pub const PHASE_PROTOCOL_ID: &str = "GsdejdRJedqmMw8WZLXsYd4eC4jWztsUTp7FG1c4Bnw5";
 
 /// Maximum number of concurrent tasks (this is important for tasks that handle files
 /// and network connections).
 pub const PARALLEL_LIMIT: usize = 45;
 
-pub const WRAPPED_SOL : Pubkey = solana_program::pubkey!("So11111111111111111111111111111111111111112");
+pub const WRAPPED_SOL: Pubkey =
+    solana_program::pubkey!("So11111111111111111111111111111111111111112");
 
 /// Default path for assets folder.
 pub const DEFAULT_ASSETS: &str = "assets";

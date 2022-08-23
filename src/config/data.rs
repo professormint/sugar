@@ -77,7 +77,7 @@ pub struct ConfigData {
     #[serde(serialize_with = "to_option_string")]
     pub shdw_storage_account: Option<String>,
 
-    pub roadmap : String
+    pub roadmap: String,
 }
 
 pub fn to_string<T, S>(value: &T, serializer: S) -> Result<S::Ok, S::Error>

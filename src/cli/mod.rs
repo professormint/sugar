@@ -134,7 +134,7 @@ pub enum Commands {
         candy_machine: Option<String>,
 
         #[clap(long)]
-        roadmap: String
+        roadmap: String,
     },
 
     /// Show the on-chain config of an existing candy machine
@@ -308,7 +308,6 @@ pub enum CollectionSubcommands {
 
         /// Address of collection mint to set the candy machine to.
         collection_mint: String,
-
     },
 
     /// Remove the collection from the candy machine

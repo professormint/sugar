@@ -132,7 +132,6 @@ async fn run() -> Result<()> {
     .expect("Error setting Ctrl-C handler");
 
     match cli.command {
-
         Commands::Collection { command } => match command {
             CollectionSubcommands::Set {
                 keypair,
@@ -226,7 +225,7 @@ async fn run() -> Result<()> {
             number,
             receiver,
             candy_machine,
-            roadmap
+            roadmap,
         } => process_mint(MintArgs {
             keypair,
             rpc_url,

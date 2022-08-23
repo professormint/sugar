@@ -19,7 +19,9 @@ use mpl_candy_machine::{
 };
 use mpl_token_metadata::pda::find_collection_authority_account;
 use solana_client::rpc_response::Response;
-use spl_associated_token_account::{create_associated_token_account, get_associated_token_address};
+use spl_associated_token_account::{
+    get_associated_token_address, instruction::create_associated_token_account,
+};
 use spl_token::{
     instruction::{initialize_mint, mint_to},
     state::Account,
@@ -166,7 +168,7 @@ pub fn mint(
     candy_machine_id: Pubkey,
     candy_machine_state: Arc<CandyMachine>,
     collection_pda_info: Arc<Option<PdaInfo<CollectionPDA>>>,
-    roadmap : Pubkey,
+    roadmap: Pubkey,
     receiver: Pubkey,
 ) -> Result<Signature> {
     let program = client.program(CANDY_MACHINE_ID);
@@ -177,7 +179,6 @@ pub fn mint(
     let candy_machine_data = &candy_machine_state.data;
 
     let minting_account_record_plugin = find_minting_account_record_plugin(&roadmap);
-  
 
     if let Some(_gatekeeper) = &candy_machine_data.gatekeeper {
         return Err(anyhow!(
@@ -408,10 +409,7 @@ pub fn mint(
                 collection_authority_record,
             })
             .args(nft_instruction::SetCollectionDuringMint {});
-            println!("\n\n\n{}\n\n\n", collection_authority_record.to_string())
-
     }
-
 
     let sig = builder.send()?;
 
