@@ -19,6 +19,7 @@ Phase CLI is built upon the popular Metaplex Sugar CLI to allow the creation of 
 ## Installation
 
 ### Recommended Method
+> **Note:** This is not implemented yet!
 
 For macOS, Linux and Windows Subsystem Linux (WSL), run the following install script in your terminal:
 
@@ -30,6 +31,8 @@ bash <(curl -sSf https://cli.phaseprotocol.io/install.sh)
 ### Developers
 
 Build From Source:
+
+You need to have access to the phase-protocol repo to build as it is a private submodule in this repo
 
 ```bash
 git clone --recurse-submodules git@github.com:dedmonkes/sugar.git 
@@ -55,7 +58,13 @@ Create a folder named `assets` to store your json and media file pairs with the 
 You can then use the `launch` command to start an interactive process to create your config file and deploy a Candy Machine to Solana. In this process you will be prompted for the roadmap address you have just created. The payout address (pool) will be automatically derived from this address (wSOL), so you will not be prompted for a payout address.
 
 ```bash
-sugar launch
+phase launch
 ```
 
 At the end of the execution of the `launch` command, the Candy Machine will be deployed on-chain.
+
+To mint
+
+``bash
+phase mint <roadmapAddress>
+```
