@@ -24,7 +24,7 @@ Phase CLI is built upon the popular Metaplex Sugar CLI to allow the creation of 
 For macOS, Linux and Windows Subsystem Linux (WSL), run the following install script in your terminal:
 
 ```bash
-bash <(curl -sSf https://cli.phaseprotocol.io/install.sh)
+bash <(curl -sSf https://dedmonkes.github.io/phase-cli/install.sh)
 ```
 
 
