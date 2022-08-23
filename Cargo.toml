@@ -1,14 +1,13 @@
 [package]
-name = "sugar-cli"
-version = "0.5.5"
+name = "phase-cli"
+version = "0.1.2"
 edition = "2021"
-description = "Command line tool for creating and managing Metaplex Candy Machines."
+description = "Command line tool for creating and managing phase compatiable minting programs."
 license = "Apache-2.0"
-repository = "https://github.com/metaplex-foundation/sugar"
-documentation = "https://docs.metaplex.com/sugar/introduction"
+repository = "https://github.com/dedmonkes/phase-cli"
 
 [[bin]]
-name = "sugar"
+name = "phase"
 path = "src/main.rs"
 
 [dependencies]

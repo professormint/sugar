@@ -2715,6 +2715,63 @@ dependencies = [
 ]
 
 [[package]]
+name = "phase-cli"
+version = "0.1.2"
+dependencies = [
+ "anchor-client",
+ "anchor-lang",
+ "anchor-spl",
+ "anyhow",
+ "async-trait",
+ "bs58 0.4.0",
+ "chrono",
+ "clap 3.2.16",
+ "console",
+ "ctrlc",
+ "data-encoding",
+ "dialoguer",
+ "dirs",
+ "futures",
+ "glob",
+ "indexmap",
+ "indicatif",
+ "ini",
+ "lazy_static",
+ "mpl-candy-machine",
+ "mpl-token-metadata",
+ "num_cpus",
+ "par-stream",
+ "phf",
+ "rand 0.8.5",
+ "rayon",
+ "regex",
+ "reqwest",
+ "retry",
+ "ring",
+ "rust-s3",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "sha2 0.10.2",
+ "shellexpand",
+ "solana-account-decoder",
+ "solana-client",
+ "solana-logger",
+ "solana-program",
+ "solana-transaction-crawler",
+ "solana-transaction-status",
+ "spl-associated-token-account",
+ "spl-token 3.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "structopt",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "tracing-bunyan-formatter",
+ "tracing-subscriber",
+ "url",
+]
+
+[[package]]
 name = "phase_protocol"
 version = "0.1.0"
 dependencies = [
@@ -4781,63 +4838,6 @@ name = "subtle"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
-
-[[package]]
-name = "sugar-cli"
-version = "0.5.5"
-dependencies = [
- "anchor-client",
- "anchor-lang",
- "anchor-spl",
- "anyhow",
- "async-trait",
- "bs58 0.4.0",
- "chrono",
- "clap 3.2.16",
- "console",
- "ctrlc",
- "data-encoding",
- "dialoguer",
- "dirs",
- "futures",
- "glob",
- "indexmap",
- "indicatif",
- "ini",
- "lazy_static",
- "mpl-candy-machine",
- "mpl-token-metadata",
- "num_cpus",
- "par-stream",
- "phf",
- "rand 0.8.5",
- "rayon",
- "regex",
- "reqwest",
- "retry",
- "ring",
- "rust-s3",
- "serde",
- "serde_json",
- "serde_yaml",
- "sha2 0.10.2",
- "shellexpand",
- "solana-account-decoder",
- "solana-client",
- "solana-logger",
- "solana-program",
- "solana-transaction-crawler",
- "solana-transaction-status",
- "spl-associated-token-account",
- "spl-token 3.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "structopt",
- "thiserror",
- "tokio",
- "tracing",
- "tracing-bunyan-formatter",
- "tracing-subscriber",
- "url",
-]
 
 [[package]]
 name = "symlink"

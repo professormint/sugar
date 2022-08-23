@@ -6,21 +6,15 @@
 [![Build and Release](https://github.com/metaplex-foundation/sugar/actions/workflows/build.yml/badge.svg)](https://github.com/metaplex-foundation/sugar/actions/workflows/build.yml)
 [![License](https://img.shields.io/crates/l/sugar-cli)](https://github.com/metaplex-foundation/sugar/blob/main/LICENSE)
 
-# Sugar: A Candy Machine CLI
+# Phase CLI
 
 <p align="center">
-  <img src="animation.gif">
+  <img src="phase-logo.svg">
 </p>
 
-Sugar is an alternative to the current Metaplex Candy Machine CLI. It has been written from the ground up and includes several improvements:
+Phase CLI is built upon the popular Metaplex Sugar CLI to allow the creation of Phase compatiable minting accounts. 
 
-- better performance for upload of media/metadata files and deploy of the candy machine &mdash; these operations take advantage of multithreaded systems to significantly speed up the computational time needed;
-- simplified build and installation procedures taking advantage of `cargo` package management, including a binary distributable package ready to use;
-- robust error handling and validation of inputs, including improvements to config and cache files, leading to more informative error messages.
-
-See [the docs](https://docs.metaplex.com/tools/sugar/introduction) for full installation and usage instructions.
-
-> **Note:** This is a beta release of Sugar. Use at your own risk.
+> **Note:** This is a alpha release of Phase CLI. Use at your own risk.
 
 ## Installation
 
@@ -29,21 +23,8 @@ See [the docs](https://docs.metaplex.com/tools/sugar/introduction) for full inst
 For macOS, Linux and Windows Subsystem Linux (WSL), run the following install script in your terminal:
 
 ```bash
-bash <(curl -sSf https://sugar.metaplex.com/install.sh)
+bash <(curl -sSf https://cli.phaseprotocol.io/install.sh)
 ```
-
-
-For Windows:
-
-Download [this installer binary](https://github.com/metaplex-foundation/winstaller/releases/latest/download/winstaller.exe) and execute it. Since it is not a verified Windows binary you may have to choose "Run Anyway" from "More Info" on the pop-up Windows dialog. 
-
-> **Dependencies:**
-> When installing on Ubuntu or WSL (Windows Subsystem Linux), you may need to install some additional dependencies:
->
-> ```bash
-> sudo apt install libudev-dev pkg-config unzip
-> ```
-
 
 
 ### Developers
@@ -59,17 +40,19 @@ cargo install --path ./
 
 ## Quick Start
 
-Set up your Solana CLI config with an RPC url and a keypair:
+Before using the CLI you must have created a roadmap at http://phaseprotocol.io, take note of both the roadmap address and the collection mint address that are created in this process, as that will be needed to deploy your phase compatiable minting account.
+
+Set up your Solana CLI config with an RPC url and a keypair ( this keypair must be the same one used to create the roadmap in the webapp ):
 
 ```bash
 solana config set --url <rpc url> --keypair <path to keypair file>
 ```
 
-Sugar will then use these settings by default if you don't specify them as CLI options, allowing commands to be much simpler. If you need help setting up Solana CLI and creating a `devnet` wallet, check the [Candy Machine v2 documentation](http://docs.metaplex.com/candy-machine-v2/getting-started#solana-wallet).
+Phase CLI will then use these settings by default if you don't specify them as CLI options, allowing commands to be much simpler. If you need help setting up Solana CLI and creating a `devnet` wallet, check the [Candy Machine v2 documentation](http://docs.metaplex.com/candy-machine-v2/getting-started#solana-wallet).
 
-Create a folder named `assets` to store your json and media file pairs with the naming convention 0.json, 0.<ext>, 1.json, 1.<ext>, etc., where the extension is `.png`, `.jpg`, etc. This is the same format described in the [Candy Machine v2 documentation](http://docs.metaplex.com/candy-machine-v2/preparing-assets).
+Create a folder named `assets` to store your json and media file pairs with the naming convention 0.json, 0.<ext>, 1.json, 1.<ext>, etc., where the extension is `.png`, `.jpg`, etc. This is the same format described in the [Candy Machine v2 documentation](http://docs.metaplex.com/candy-machine-v2/preparing-assets). Although you must use the collection mint provided by the Phase Protocol web app so do not include this in your assets, instead use the `collection set <mint_address>` command after deploying your candy machine to config the collection associated. 
 
-You can then use the `launch` command to start an interactive process to create your config file and deploy a Candy Machine to Solana:
+You can then use the `launch` command to start an interactive process to create your config file and deploy a Candy Machine to Solana. In this process you will be prompted for the roadmap address you have just created. The payout address (pool) will be automatically derived from this address (wSOL), so you will not be prompted for a payout address.
 
 ```bash
 sugar launch

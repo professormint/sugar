@@ -2,10 +2,9 @@ name: Deploy Install Script to GitHub Pages
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
     paths: 
-      - 'script/sugar-install.sh'
+      - 'script/phase-install.sh'
 permissions:
   contents: write
 jobs:
@@ -19,7 +18,7 @@ jobs:
       - name: Build 🔧
         run: |
           mkdir build
-          cp ./script/sugar-install.sh ./build/install.sh
+          cp ./script/phase-install.sh ./build/install.sh
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
