@@ -19,7 +19,6 @@ Phase CLI is built upon the popular Metaplex Sugar CLI to allow the creation of 
 ## Installation
 
 ### Recommended Method
-> **Note:** This is not implemented yet!
 
 For macOS, Linux and Windows Subsystem Linux (WSL), run the following install script in your terminal:
 
