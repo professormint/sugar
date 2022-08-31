@@ -34,6 +34,7 @@ mpl-candy-machine = { path = "./modules/metaplex/candy-machine/program", feature
 mpl-token-metadata =  { version = "1.3.2", features = ["no-entrypoint"] }
 num_cpus = "1.13.1"
 par-stream = { version = "0.7.0", features = ["runtime-tokio"] }
+phase_protocol = {git = "https://github.com/dedmonkes/ded-social-programs", features = ["no-entrypoint"] }
 phf = { version = "0.10", features = ["macros"] }
 rand = "0.8.5"
 rayon = "1.5.3"
