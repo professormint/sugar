@@ -410,7 +410,6 @@ pub fn mint(
                     collection_authority_record,
                 })
                 .args(nft_instruction::MintNft { creator_bump });
-                
             // Add additional accounts directly to the mint instruction otherwise it won't work.
             if !additional_accounts.is_empty() {
                 mint_ix = mint_ix.accounts(additional_accounts);
