@@ -145,6 +145,7 @@ pub fn create_and_set_collection(
             collection_authority_record,
             minting_account_record_plugin,
             token_metadata_program: mpl_token_metadata::ID,
+            token_program: spl_token::id(),
         })
         .args(nft_instruction::SetCollection);
 

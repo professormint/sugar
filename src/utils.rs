@@ -142,7 +142,7 @@ pub fn get_anchor_account<T: AccountDeserialize>(
     rpc_client: Arc<anchor_client::Client>,
 ) -> Result<T, anchor_lang::error::Error> {
     let data = rpc_client
-        .program(Pubkey::from_str(PHASE_PROTOCOL_ID).unwrap())
+        .program(phase_protocol_sdk::id())
         .rpc()
         .get_account_data(address)
         .unwrap();

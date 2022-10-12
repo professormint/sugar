@@ -18,7 +18,7 @@ use mpl_candy_machine::{
     CollectionPDA, EndSettingType, WhitelistMintMode,
 };
 use mpl_token_metadata::pda::find_collection_authority_account;
-use phase_protocol::state::Roadmap;
+use phase_protocol_sdk::state::Roadmap;
 use solana_client::rpc_response::Response;
 use spl_associated_token_account::{
     get_associated_token_address, instruction::create_associated_token_account,
@@ -407,7 +407,6 @@ pub fn mint(
                     collection_mint: collection_pda.mint,
                     collection_metadata: find_metadata_pda(&collection_pda.mint),
                     collection_master_edition: find_master_edition_pda(&collection_pda.mint),
-                    collection_authority: update_authority,
                     collection_authority_record,
                 })
                 .args(nft_instruction::MintNft { creator_bump });

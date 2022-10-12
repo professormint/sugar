@@ -115,7 +115,7 @@ pub fn get_collection_pda(
 pub fn get_roadmap_pool_address(roadmap: &Pubkey, mint: &Pubkey) -> Pubkey {
     Pubkey::find_program_address(
         &[b"roadmap_pool", roadmap.as_ref(), mint.as_ref()],
-        &Pubkey::from_str(PHASE_PROTOCOL_ID).unwrap(),
+        &phase_protocol_sdk::id(),
     )
     .0
 }
