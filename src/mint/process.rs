@@ -380,7 +380,7 @@ pub fn mint(
         Some((collection_pda_pubkey, collection_pda)) => {
             let collection_authority_record =
                 find_collection_authority_account(&collection_pda.mint, collection_pda_pubkey).0;
-            builder = builder;
+            let builder = builder;
 
             let mut mint_ix = program
                 .request()
