@@ -2623,7 +2623,7 @@ dependencies = [
 
 [[package]]
 name = "phase-cli"
-version = "0.1.3"
+version = "0.1.5"
 dependencies = [
  "anchor-client",
  "anchor-lang",
