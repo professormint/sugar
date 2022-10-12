@@ -33,8 +33,8 @@ SCRIPT_DIR=$(cd -- $(dirname -- "${BASH_SOURCE[0]}") &>/dev/null && pwd)
 PARENT_DIR="$(dirname "$SCRIPT_DIR")"
 ASSETS_DIR=$CURRENT_DIR/assets
 CACHE_DIR=$CURRENT_DIR
-SUGAR_BIN="cargo run --quiet --bin sugar --"
-SUGAR_LOG="sugar.log"
+PHASE_BIN="cargo run --quiet --bin phase-cli --"
+PHASE_LOG="phase.log"
 RESUME_FILE="$SCRIPT_DIR/.sugar_resume"
 
 # Remote files to test the upload
@@ -118,7 +118,7 @@ function devnet_env() {
 RESUME=0
 
 echo ""
-CYN "Sugar CLI - Candy Machine automated test"
+CYN "Phase CLI - Candy Machine automated test"
 CYN "----------------------------------------"
 
 echo ""
@@ -205,7 +205,7 @@ fi
 while getopts r:p flag; do
     case "${flag}" in
         r) RPC=${OPTARG} ;;
-        p) SUGAR_BIN="cargo run --release --bin sugar --" ;;
+        p) PHASE_BIN="cargo run --release --bin sugar --" ;;
         *) ;;
     esac
 done
@@ -443,7 +443,7 @@ function clean_up {
     rm $CONFIG_FILE 2>/dev/null
     rm -rf $ASSETS_DIR 2>/dev/null
     rm -rf $CACHE_FILE 2>/dev/null
-    rm -rf $SUGAR_LOG 2>/dev/null
+    rm -rf $PHASE_LOG 2>/dev/null
     rm -rf test_item 2>/dev/null
 }
 
@@ -665,7 +665,7 @@ function change_cache {
 
 # run the upload command
 function upload {
-    $SUGAR_BIN upload -c ${CONFIG_FILE} --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC $ASSETS_DIR
+    $PHASE_BIN upload -c ${CONFIG_FILE} --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC $ASSETS_DIR
     EXIT_CODE=$?
     if [ ! $EXIT_CODE -eq 0 ]; then
         MAG "<<<"
@@ -676,7 +676,7 @@ function upload {
 
 # run the deploy command
 function deploy {
-    $SUGAR_BIN deploy -c ${CONFIG_FILE} --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC
+    $PHASE_BIN deploy -c ${CONFIG_FILE} --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC
     EXIT_CODE=$?
     if [ ! $EXIT_CODE -eq 0 ]; then
         MAG "<<<"
@@ -687,7 +687,7 @@ function deploy {
 
 # run the verify upload command
 function verify {
-    $SUGAR_BIN verify --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC
+    $PHASE_BIN verify --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC
     EXIT_CODE=$?
     if [ ! $EXIT_CODE -eq 0 ]; then
         MAG "<<<"
@@ -698,7 +698,7 @@ function verify {
 
 # extracts the collection mint from the output of show command
 function collection_mint() {
-    local RESULT=`$SUGAR_BIN show --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC | grep "collection" | cut -d ':' -f 3`
+    local RESULT=`$PHASE_BIN show --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC | grep "collection" | cut -d ':' -f 3`
     EXIT_CODE=$?
     if [ ! $EXIT_CODE -eq 0 ]; then
         MAG "<<<"
@@ -736,7 +736,7 @@ if [ "$LAUNCH" = "Y" ]; then
     CYN "Executing Sugar launch: steps [1, 2, 3, 4]"
     echo ""
     MAG ">>>"
-    $SUGAR_BIN launch -c ${CONFIG_FILE} --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC $ASSETS_DIR --skip-collection-prompt
+    $PHASE_BIN launch -c ${CONFIG_FILE} --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC $ASSETS_DIR --skip-collection-prompt
     EXIT_CODE=$?
     MAG "<<<"
     
@@ -749,7 +749,7 @@ else
     CYN "1. Validating JSON metadata files"
     echo ""
     MAG ">>>"
-    $SUGAR_BIN validate $ASSETS_DIR --skip-collection-prompt
+    $PHASE_BIN validate $ASSETS_DIR --skip-collection-prompt
     EXIT_CODE=$?
     MAG "<<<"
 
@@ -797,7 +797,7 @@ if [ ! "$MANUAL_CACHE" == "Y" ]; then
     echo ""
 
     MAG "Removing collection >>>"
-    $SUGAR_BIN collection remove --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC
+    $PHASE_BIN collection remove --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC
     MAG "<<<"
 
     # checking that the collection PDA was removed
@@ -810,7 +810,7 @@ if [ ! "$MANUAL_CACHE" == "Y" ]; then
 
     echo ""
     MAG "Setting collection >>>"
-    $SUGAR_BIN collection set --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC $COLLECTION_PDA
+    $PHASE_BIN collection set --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC $COLLECTION_PDA
     MAG "<<<"
 
     # checking that the collection PDA was set
@@ -841,7 +841,7 @@ echo ""
 CYN "7. Minting"
 echo ""
 MAG ">>>"
-$SUGAR_BIN mint --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC -n $MULTIPLE
+$PHASE_BIN mint --keypair $WALLET_KEY --cache $CACHE_FILE -r $RPC -n $MULTIPLE
 EXIT_CODE=$?
 MAG "<<<"
 
@@ -856,7 +856,7 @@ if [ "${CLOSE}" = "Y" ]; then
     CYN "8. Withdrawing Candy Machine funds and clean up"
     echo ""
     MAG ">>>"
-    $SUGAR_BIN withdraw --keypair $WALLET_KEY -r $RPC --candy-machine $CANDY_MACHINE_ID
+    $PHASE_BIN withdraw --keypair $WALLET_KEY -r $RPC --candy-machine $CANDY_MACHINE_ID
     EXIT_CODE=$?
     MAG "<<<"
     

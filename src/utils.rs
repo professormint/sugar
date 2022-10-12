@@ -1,4 +1,4 @@
-use std::{str::FromStr, thread::sleep, time::Duration};
+use std::{str::FromStr, sync::Arc, thread::sleep, time::Duration};
 
 pub use anchor_client::solana_sdk::hash::Hash;
 use anchor_client::{
@@ -8,6 +8,7 @@ use anchor_client::{
     },
     Program,
 };
+use anchor_lang::AccountDeserialize;
 pub use anyhow::{anyhow, Result};
 use console::{style, Style};
 use dialoguer::theme::ColorfulTheme;
@@ -134,4 +135,18 @@ pub fn assert_correct_authority(user_keypair: &Pubkey, update_authority: &Pubkey
     }
 
     Ok(())
+}
+
+pub fn get_anchor_account<T: AccountDeserialize>(
+    address: &Pubkey,
+    rpc_client: Arc<anchor_client::Client>,
+) -> Result<T, anchor_lang::error::Error> {
+    let data = rpc_client
+        .program(phase_protocol_sdk::id())
+        .rpc()
+        .get_account_data(address)
+        .unwrap();
+    let mut data_slice: &[u8] = &data;
+
+    AccountDeserialize::try_deserialize(&mut data_slice)
 }

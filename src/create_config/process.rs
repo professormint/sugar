@@ -3,7 +3,6 @@ use std::{
     fs::{File, OpenOptions},
     path::{Path, PathBuf},
     str::FromStr,
-    sync::Arc,
 };
 
 use anchor_lang::prelude::Pubkey;
@@ -14,15 +13,14 @@ use dialoguer::{Confirm, Input, MultiSelect, Select};
 use url::Url;
 
 use crate::{
-    candy_machine::CANDY_MACHINE_ID,
     config::{
         parse_string_as_date, ConfigData, Creator, EndSettingType, EndSettings, GatekeeperConfig,
         HiddenSettings, UploadMethod, WhitelistMintMode, WhitelistMintSettings,
     },
     constants::*,
-    setup::{setup_client, sugar_setup},
+    pdas::get_roadmap_pool_address,
     upload::list_files,
-    utils::{check_spl_token, check_spl_token_account, get_dialoguer_theme},
+    utils::get_dialoguer_theme,
     validate::Metadata,
 };
 
@@ -179,6 +177,11 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
         .expect("Failed to parse string into u64 that should have already been validated.");
 
     // number
+    config_data.roadmap = Input::with_theme(&theme)
+        .with_prompt("What is the roadmap publickey?")
+        .validate_with(pubkey_validator)
+        .interact()
+        .unwrap();
 
     config_data.number = if num_files > 0 && (num_files % 2) == 0 && Confirm::with_theme(&theme)
         .with_prompt(
@@ -328,14 +331,13 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
         config_data.creators.push(creator);
     });
 
-    const SPL_INDEX: usize = 0;
-    const GATEKEEPER_INDEX: usize = 1;
-    const WL_INDEX: usize = 2;
-    const END_SETTINGS_INDEX: usize = 3;
-    const HIDDEN_SETTINGS_INDEX: usize = 4;
+    // const SPL_INDEX: usize = 0;
+    const GATEKEEPER_INDEX: usize = 0;
+    const WL_INDEX: usize = 1;
+    const END_SETTINGS_INDEX: usize = 2;
+    const HIDDEN_SETTINGS_INDEX: usize = 3;
 
     let extra_functions_options = vec![
-        "SPL Token Mint",
         "Gatekeeper",
         "Whitelist Mint",
         "End Settings",
@@ -349,53 +351,54 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
 
     // SPL token mint
 
-    let sugar_config = sugar_setup(args.keypair, args.rpc_url)?;
-    let client = Arc::new(setup_client(&sugar_config)?);
-    let program = client.program(CANDY_MACHINE_ID);
-
-    if choices.contains(&SPL_INDEX) {
-        config_data.sol_treasury_account = None;
-        config_data.spl_token = Some(
-            Pubkey::from_str(
-                &Input::with_theme(&theme)
-                    .with_prompt("What is your SPL token mint address?")
-                    .validate_with(pubkey_validator)
-                    .validate_with(|input: &String| -> Result<()> {
-                        check_spl_token(&program, input)?;
-                        Ok(())
-                    })
-                    .interact()
-                    .unwrap(),
-            )
-            .expect("Failed to parse string into pubkey that should have already been validated."),
-        );
-        config_data.spl_token_account = Some(
-                Pubkey::from_str(
-                    &Input::with_theme(&theme)
-                        .with_prompt("What is your SPL token account address (the account that will hold the SPL token mints)?")
-                        .validate_with(pubkey_validator)
-                        .validate_with(|input: &String| -> Result<()> {
-                            check_spl_token_account(&program, input)
-                        })
-                        .interact()
-                        .unwrap(),
-                )
-                    .expect("Failed to parse string into pubkey that should have already been validated."),
-            )
-    } else {
-        config_data.spl_token = None;
-        config_data.spl_token_account = None;
-        config_data.sol_treasury_account = Some(
-            Pubkey::from_str(
-                &Input::with_theme(&theme)
-                    .with_prompt("What is your SOL treasury address?")
-                    .validate_with(pubkey_validator)
-                    .interact()
-                    .unwrap(),
-            )
-            .expect("Failed to parse string into pubkey that should have already been validated."),
-        );
-    };
+    config_data.sol_treasury_account = None;
+    config_data.spl_token = Some(WRAPPED_SOL);
+    config_data.spl_token_account = Some(get_roadmap_pool_address(
+        &Pubkey::from_str(&config_data.roadmap).unwrap(),
+        &WRAPPED_SOL,
+    ));
+    // if choices.contains(&SPL_INDEX) {
+    //     config_data.spl_token = Some(
+    //         Pubkey::from_str(
+    //             &Input::with_theme(&theme)
+    //                 .with_prompt("What is your SPL token mint address?")
+    //                 .validate_with(pubkey_validator)
+    //                 .validate_with(|input: &String| -> Result<()> {
+    //                     check_spl_token(&program, input)?;
+    //                     Ok(())
+    //                 })
+    //                 .interact()
+    //                 .unwrap(),
+    //         )
+    //         .expect("Failed to parse string into pubkey that should have already been validated."),
+    //     );
+    //     config_data.spl_token_account = Some(
+    //             Pubkey::from_str(
+    //                 &Input::with_theme(&theme)
+    //                     .with_prompt("What is your SPL token account address (the account that will hold the SPL token mints)?")
+    //                     .validate_with(pubkey_validator)
+    //                     .validate_with(|input: &String| -> Result<()> {
+    //                         check_spl_token_account(&program, input)
+    //                     })
+    //                     .interact()
+    //                     .unwrap(),
+    //             )
+    //                 .expect("Failed to parse string into pubkey that should have already been validated."),
+    //         )
+    // } else {
+    //     config_data.spl_token = None;
+    //     config_data.spl_token_account = None;
+    //     config_data.sol_treasury_account = Some(
+    //         Pubkey::from_str(
+    //             &Input::with_theme(&theme)
+    //                 .with_prompt("What is your SOL treasury address?")
+    //                 .validate_with(pubkey_validator)
+    //                 .interact()
+    //                 .unwrap(),
+    //         )
+    //         .expect("Failed to parse string into pubkey that should have already been validated."),
+    //     );
+    // };
 
     // gatekeeper
 
@@ -556,7 +559,7 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
 
     // upload method
 
-    let upload_options = vec!["Bundlr", "AWS", "NFT Storage", "SHDW"];
+    let upload_options = vec!["AWS", "NFT Storage", "SHDW"];
     config_data.upload_method = match Select::with_theme(&theme)
         .with_prompt("What upload method do you want to use?")
         .items(&upload_options)
@@ -564,11 +567,9 @@ pub fn process_create_config(args: CreateConfigArgs) -> Result<()> {
         .interact()
         .unwrap()
     {
-        0 => UploadMethod::Bundlr,
-        1 => UploadMethod::AWS,
-        2 => UploadMethod::NftStorage,
-        3 => UploadMethod::SHDW,
-        _ => UploadMethod::Bundlr,
+        0 => UploadMethod::AWS,
+        1 => UploadMethod::NftStorage,
+        _ => UploadMethod::SHDW,
     };
 
     if config_data.upload_method == UploadMethod::AWS {

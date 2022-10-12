@@ -35,7 +35,9 @@ pub fn process_set_collection(args: SetCollectionArgs) -> Result<()> {
     let client = setup_client(&sugar_config)?;
     let program = client.program(CANDY_MACHINE_ID);
     let mut cache = Cache::new();
+    let config_data = get_config_data(&args.config)?;
 
+    let roadmap = Pubkey::from_str(&config_data.roadmap).unwrap();
     // The candy machine id specified takes precedence over the one from the cache.
     let candy_machine_id = match args.candy_machine {
         Some(ref candy_machine_id) => candy_machine_id.to_owned(),
@@ -106,6 +108,7 @@ pub fn process_set_collection(args: SetCollectionArgs) -> Result<()> {
         &collection_mint_pubkey,
         &collection_metadata_info,
         &collection_edition_info,
+        &roadmap,
     )?;
 
     pb.finish_with_message(format!(
@@ -159,12 +162,14 @@ pub fn set_collection(
     collection_mint_pubkey: &Pubkey,
     collection_metadata_info: &PdaInfo<Metadata>,
     collection_edition_info: &PdaInfo<MasterEditionV2>,
+    roadmap: &Pubkey,
 ) -> Result<Signature> {
     let payer = program.payer();
 
     let collection_pda_pubkey = find_collection_pda(candy_pubkey).0;
     let (collection_metadata_pubkey, collection_metadata) = collection_metadata_info;
     let (collection_edition_pubkey, collection_edition) = collection_edition_info;
+    let minting_account_record_plugin = find_minting_account_record_plugin(roadmap);
 
     let collection_authority_record =
         find_collection_authority_account(collection_mint_pubkey, &collection_pda_pubkey).0;
@@ -202,8 +207,10 @@ pub fn set_collection(
             metadata: *collection_metadata_pubkey,
             mint: *collection_mint_pubkey,
             edition: *collection_edition_pubkey,
+            minting_account_record_plugin,
             collection_authority_record,
             token_metadata_program: mpl_token_metadata::ID,
+            token_program: spl_token::id(),
         })
         .args(nft_instruction::SetCollection);
 

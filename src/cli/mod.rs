@@ -16,18 +16,6 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Commands {
     /// Interact with the bundlr network
-    Bundlr {
-        /// Path to the keypair file, uses Sol config or defaults to "~/.config/solana/id.json"
-        #[clap(short, long)]
-        keypair: Option<String>,
-
-        /// RPC Url
-        #[clap(short, long)]
-        rpc_url: Option<String>,
-
-        #[clap(subcommand)]
-        action: BundlrAction,
-    },
 
     /// Manage the collection on the candy machine
     Collection {
@@ -144,6 +132,9 @@ pub enum Commands {
         /// Address of candy machine to mint from.
         #[clap(long)]
         candy_machine: Option<String>,
+
+        #[clap(long)]
+        roadmap: String,
     },
 
     /// Show the on-chain config of an existing candy machine

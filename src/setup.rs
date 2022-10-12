@@ -42,6 +42,8 @@ pub fn sugar_setup(
         },
     };
 
+    println!("{}", rpc_url);
+
     let keypair = match keypair_opt {
         Some(keypair_path) => match read_keypair_file(&keypair_path) {
             Ok(keypair) => keypair,

@@ -244,6 +244,7 @@ pub fn get_cm_creator_accounts(
             commitment: Some(CommitmentConfig {
                 commitment: CommitmentLevel::Confirmed,
             }),
+            min_context_slot: None,
         },
         with_context: None,
     };

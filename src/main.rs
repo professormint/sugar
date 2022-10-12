@@ -11,8 +11,7 @@ use std::{
 use anyhow::{anyhow, Result};
 use clap::Parser;
 use console::style;
-use sugar_cli::{
-    bundlr::{process_bundlr, BundlrArgs},
+use phase_cli::{
     cli::{Cli, CollectionSubcommands, Commands},
     collections::{
         process_remove_collection, process_set_collection, RemoveCollectionArgs, SetCollectionArgs,
@@ -39,7 +38,7 @@ use tracing_subscriber::{self, filter::LevelFilter, prelude::*, EnvFilter};
 fn setup_logging(level: Option<EnvFilter>) -> Result<()> {
     // Log path; change this to be dynamic for multiple OSes.
     // Log in current directory for now.
-    let log_path = PathBuf::from("sugar.log");
+    let log_path = PathBuf::from("phase.log");
 
     let file = OpenOptions::new()
         .write(true)
@@ -133,18 +132,6 @@ async fn run() -> Result<()> {
     .expect("Error setting Ctrl-C handler");
 
     match cli.command {
-        Commands::Bundlr {
-            keypair,
-            rpc_url,
-            action,
-        } => {
-            process_bundlr(BundlrArgs {
-                keypair,
-                rpc_url,
-                action,
-            })
-            .await?
-        }
         Commands::Collection { command } => match command {
             CollectionSubcommands::Set {
                 keypair,
@@ -238,12 +225,14 @@ async fn run() -> Result<()> {
             number,
             receiver,
             candy_machine,
+            roadmap,
         } => process_mint(MintArgs {
             keypair,
             rpc_url,
             cache,
             number,
             receiver,
+            roadmap,
             candy_machine,
         })?,
         Commands::Show {

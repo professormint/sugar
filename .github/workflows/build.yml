@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - windows-latest
+          # - windows-latest
           - ubuntu-latest
           - macos-latest
 
@@ -21,6 +21,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_PAT }}
+          ssh-key: ${{ secrets.SSH_KEY }}
+          submodules: recursive
 
       - name: Install Latest Rust
         uses: actions-rs/toolchain@v1
@@ -45,11 +49,11 @@ jobs:
           fi
 
           if [[ "${RUNNER_OS}" == "macOS" ]]; then
-            binary_path="sugar-macos-intel-latest${binary_extension}"
+            binary_path="phase-macos-intel-latest${binary_extension}"
           else
-            binary_path="sugar-${{ matrix.os }}${binary_extension}"
+            binary_path="phase-${{ matrix.os }}${binary_extension}"
           fi
-          mv "target/release/sugar${binary_extension}" "${binary_path}"
+          mv "target/release/phase${binary_extension}" "${binary_path}"
           echo "::set-output name=binary_path::${binary_path}"
           strip "${binary_path}"
 
