@@ -16,7 +16,7 @@ pub use indicatif::{ProgressBar, ProgressStyle};
 use solana_client::rpc_client::RpcClient;
 use spl_token::state::{Account, Mint};
 
-use crate::{common::PHASE_PROTOCOL_ID, config::data::Cluster};
+use crate::config::data::Cluster;
 
 /// Hash for devnet cluster
 pub const DEVNET_HASH: &str = "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG";
@@ -142,7 +142,7 @@ pub fn get_anchor_account<T: AccountDeserialize>(
     rpc_client: Arc<anchor_client::Client>,
 ) -> Result<T, anchor_lang::error::Error> {
     let data = rpc_client
-        .program(Pubkey::from_str(PHASE_PROTOCOL_ID).unwrap())
+        .program(phase_protocol_sdk::id())
         .rpc()
         .get_account_data(address)
         .unwrap();

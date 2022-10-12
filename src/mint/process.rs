@@ -18,7 +18,7 @@ use mpl_candy_machine::{
     CollectionPDA, EndSettingType, WhitelistMintMode,
 };
 use mpl_token_metadata::pda::find_collection_authority_account;
-use phase_protocol::state::Roadmap;
+use phase_protocol_sdk::state::Roadmap;
 use solana_client::rpc_response::Response;
 use spl_associated_token_account::{
     get_associated_token_address, instruction::create_associated_token_account,
@@ -358,7 +358,7 @@ pub fn mint(
     let (candy_machine_creator_pda, creator_bump) =
         find_candy_machine_creator_pda(&candy_machine_id);
 
-    let update_authority = Pubkey::find_program_address(
+    let _update_authority = Pubkey::find_program_address(
         &[
             b"account-governance",
             roadmap_account.realm.as_ref(),
@@ -380,7 +380,7 @@ pub fn mint(
         Some((collection_pda_pubkey, collection_pda)) => {
             let collection_authority_record =
                 find_collection_authority_account(&collection_pda.mint, collection_pda_pubkey).0;
-            builder = builder;
+            let builder = builder;
 
             let mut mint_ix = program
                 .request()
@@ -407,11 +407,9 @@ pub fn mint(
                     collection_mint: collection_pda.mint,
                     collection_metadata: find_metadata_pda(&collection_pda.mint),
                     collection_master_edition: find_master_edition_pda(&collection_pda.mint),
-                    collection_authority: update_authority,
                     collection_authority_record,
                 })
                 .args(nft_instruction::MintNft { creator_bump });
-                
             // Add additional accounts directly to the mint instruction otherwise it won't work.
             if !additional_accounts.is_empty() {
                 mint_ix = mint_ix.accounts(additional_accounts);

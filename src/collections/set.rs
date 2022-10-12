@@ -210,6 +210,7 @@ pub fn set_collection(
             minting_account_record_plugin,
             collection_authority_record,
             token_metadata_program: mpl_token_metadata::ID,
+            token_program: spl_token::id(),
         })
         .args(nft_instruction::SetCollection);
 
