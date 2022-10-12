@@ -16,7 +16,7 @@ pub use indicatif::{ProgressBar, ProgressStyle};
 use solana_client::rpc_client::RpcClient;
 use spl_token::state::{Account, Mint};
 
-use crate::{common::PHASE_PROTOCOL_ID, config::data::Cluster};
+use crate::config::data::Cluster;
 
 /// Hash for devnet cluster
 pub const DEVNET_HASH: &str = "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG";

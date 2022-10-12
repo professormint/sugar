@@ -358,7 +358,7 @@ pub fn mint(
     let (candy_machine_creator_pda, creator_bump) =
         find_candy_machine_creator_pda(&candy_machine_id);
 
-    let update_authority = Pubkey::find_program_address(
+    let _update_authority = Pubkey::find_program_address(
         &[
             b"account-governance",
             roadmap_account.realm.as_ref(),

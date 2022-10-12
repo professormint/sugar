@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 use anchor_client::{solana_sdk::pubkey::Pubkey, ClientError, Program};
 use anyhow::{anyhow, Result};
 use mpl_candy_machine::CollectionPDA;
@@ -9,7 +7,7 @@ use mpl_token_metadata::{
     utils::try_from_slice_checked,
 };
 
-use crate::{candy_machine::CANDY_MACHINE_ID, common::PHASE_PROTOCOL_ID};
+use crate::candy_machine::CANDY_MACHINE_ID;
 
 pub type PdaInfo<T> = (Pubkey, T);
 
